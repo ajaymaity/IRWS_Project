@@ -16,5 +16,5 @@ Configure the project in Eclipse
 Parse the documents
 --
 * Run ParseDocs.java inside ```./src/ie/tcd/```. The code parses the FT documents, and stores the parsed content in ```/outputs/parsed_docs/ft.json```.
-* You may specify an optional data directory using the following command line arguments:
+* You may specify an optional data directory using the following command line arguments:<br/>
 ```java ParseDocs --data <data_dir>```.
