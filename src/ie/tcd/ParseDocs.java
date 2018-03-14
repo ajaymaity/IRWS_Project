@@ -6,13 +6,21 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FileIO {
+/**
+ * Parse documents, along with various File I/O operations.
+ * @author Ajay Maity Local
+ *
+ */
+public class ParseDocs {
 
 	/**
 	 * Load files from directory and return list of files.
@@ -129,23 +137,7 @@ public class FileIO {
 		else currentHeadline += line + " ";
 		ftDoc.put(element.toLowerCase(), currentHeadline);
 	}
-	
-	/**
-	 * Pre-process string such as remove multiple spaces, trim, replace, etc.
-	 * @param text the string to pre-process
-	 * @return the pre-processed string
-	 */
-	private String preProcess(String text) {
 		
-		String line = text.trim();
-		line = line.replaceAll("&amp;", "&");
-		line = line.replaceAll("&gt;", ">");
-		line = line.replaceAll("&lt;", "<");
-		line = line.replaceAll(" +", " ");
-		
-		return line;
-	}
-	
 	/**
 	 * Parse Financial Times data
 	 * @param ftDirectoryStr list of file locations to parse
@@ -153,9 +145,9 @@ public class FileIO {
 	 * @return a list of parsed map FT data
 	 * @throws IOException when file is not present
 	 */
-	private List<Map<String, String>> parseFT(String ftDirectoryStr, boolean hasSubdirectory) throws IOException {
+	private List<String> parseFT(String ftDirectoryStr, boolean hasSubdirectory) throws IOException {
 		
-		List<Map<String, String>> ftDocs = new ArrayList<Map<String, String>>();
+		List<String> ftDocs = new ArrayList<String>();
 		List<File> filesList = getFiles(ftDirectoryStr, hasSubdirectory);
 		
 		Map<String, String> ftDoc = null;
@@ -237,7 +229,7 @@ public class FileIO {
 									if (ftDoc.get("tp") != null) ftDoc.put("tp", ftDoc.get("tp").trim());
 									if (ftDoc.get("pe") != null) ftDoc.put("pe", ftDoc.get("pe").trim());
 									
-									ftDocs.add(ftDoc);
+									ftDocs.add(ftDoc.toString());
 									ftDoc = null;
 									docCount++;
 									xxNext = "";
@@ -482,12 +474,25 @@ public class FileIO {
 	 */
 	public static void main(String[] args) throws IOException {
 		
-		System.out.println("Hello World");
+		Map<String, String> values = new ParseCLA(args, "ParseDocs").parse();
+		String dataDir = values.get("dataDir");
 		
-		FileIO fio = new FileIO();
-		String ftDirectoryStr = "./content/Assignment Two/Assignment Two/ft/";
-		List<Map<String, String>> ftDocs = fio.parseFT(ftDirectoryStr, true);
+		ParseDocs fio = new ParseDocs();
+		String ftDirectoryStr = dataDir + "ft/";
+		System.out.println("Parsing FT documents...");
+		List<String> ftDocs = fio.parseFT(ftDirectoryStr, true);
+		System.out.println("Parsing done!\n");
 		
-		System.out.println("Done!");
+		// Create output directory if it does not exist
+		File outputDir = new File("outputs");
+		if (!outputDir.exists()) outputDir.mkdir();
+		
+		// Create a directory to store parsed documents
+		File parsedDocsDir = new File("outputs/parsed_docs");
+		if (!parsedDocsDir.exists()) parsedDocsDir.mkdir();
+		
+		System.out.println("Storing parsed FT doc...");
+		Files.write(Paths.get("outputs/parsed_docs/ft.json"), ftDocs, Charset.forName("UTF-8"));
+		System.out.println("Storing done!\n");
 	}
 }

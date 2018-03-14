@@ -2,6 +2,11 @@ package ie.tcd;
 
 import java.io.File;
 
+/**
+ * Takes care of all the Errors that may occur while parsing the documents.
+ * @author Ajay Maity Local
+ *
+ */
 public class Errors {
 
 	/**
