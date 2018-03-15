@@ -13,6 +13,10 @@ Configure the project in Eclipse
 * Import the folder into Eclipse as a General project.
 * Convert the project into Java project by changing its facet.
 
+Configuring JAR libraries for the project
+--
+* Add External JARS to Eclipse project, all of which are present in ```./libs/``` directory.
+
 Parse the documents
 --
 * Run ```ParseDocs.java``` inside ```./src/ie/tcd/```. The code parses the FT documents, and stores the parsed content in ```/outputs/parsed_docs/ft.json```.
