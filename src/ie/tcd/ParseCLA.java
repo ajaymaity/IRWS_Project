@@ -35,7 +35,7 @@ public class ParseCLA {
 
 		options.addOption("h", "help", false, "Show help.");
 		if (this.fileName.contentEquals("ParseDocs"))
-			options.addOption("d", "data", true, "Directory where the data is present [Default: \"./content/Assignment Two/Assignment Two/\"");
+			options.addOption("d", "data", true, "Directory where the data is present [Default: \"./contents/Assignment Two/Assignment Two/\"");
 		else if (this.fileName.contentEquals("Indexer"))
 			options.addOption("d", "docs", true, "Directory where the parsed documents are present [Default: \"./outputs/parsed_docs/\"");
 		else {
@@ -62,7 +62,7 @@ public class ParseCLA {
 			
 			if (cmd.hasOption("h")) help();
 			if (this.fileName.contentEquals("ParseDocs"))
-				values.put("dataDir", cmd.getOptionValue("d", "./content/Assignment Two/Assignment Two/"));
+				values.put("dataDir", cmd.getOptionValue("d", "./contents/Assignment Two/Assignment Two/"));
 			else if (this.fileName.contentEquals("Indexer"))
 				values.put("docsDir", cmd.getOptionValue("d", "./outputs/parsed_docs/"));
 			else {
