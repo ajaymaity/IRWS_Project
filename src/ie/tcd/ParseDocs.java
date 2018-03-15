@@ -2,18 +2,20 @@ package ie.tcd;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.json.simple.JSONObject;
 
 /**
  * Parse documents, along with various File I/O operations.
@@ -102,6 +104,23 @@ public class ParseDocs {
 	}
 	
 	/**
+	 * Delete Directory from file system (will delete the contents recursively)
+	 * @param file directory or file to delete
+	 */
+	public static void deleteDir(File file) {
+		
+		File[] contents = file.listFiles();
+		if (contents != null) {
+			
+			for (File f: contents) {
+				
+				deleteDir(f);
+			}
+		}
+		file.delete();
+	}
+	
+	/**
 	 * Parse the line which has opening and closing element on same line
 	 * @param partitions array of sub-strings in line split by >
 	 * @param elementName name of element in the line
@@ -182,7 +201,7 @@ public class ParseDocs {
 			
 			// Loop through each line
 			while ((line = bufferedReader.readLine()) != null) {
-				
+							
 				lineNumber++;
 				line = line.trim();
 				line = line.replaceAll("&amp;", "&");
@@ -229,7 +248,7 @@ public class ParseDocs {
 									if (ftDoc.get("tp") != null) ftDoc.put("tp", ftDoc.get("tp").trim());
 									if (ftDoc.get("pe") != null) ftDoc.put("pe", ftDoc.get("pe").trim());
 									
-									ftDocs.add(ftDoc.toString());
+									ftDocs.add(new JSONObject(ftDoc).toString() + ",");
 									ftDoc = null;
 									docCount++;
 									xxNext = "";
@@ -478,6 +497,8 @@ public class ParseDocs {
 		String dataDir = values.get("dataDir");
 		
 		ParseDocs fio = new ParseDocs();
+		dataDir = dataDir.replace("\\", "/");
+		if (!dataDir.endsWith("/")) dataDir += "/";
 		String ftDirectoryStr = dataDir + "ft/";
 		System.out.println("Parsing FT documents...");
 		List<String> ftDocs = fio.parseFT(ftDirectoryStr, true);
@@ -492,7 +513,11 @@ public class ParseDocs {
 		if (!parsedDocsDir.exists()) parsedDocsDir.mkdir();
 		
 		System.out.println("Storing parsed FT doc...");
-		Files.write(Paths.get("outputs/parsed_docs/ft.json"), ftDocs, Charset.forName("UTF-8"));
+		Path ftPath = Paths.get("outputs/parsed_docs/ft.json");
+		deleteDir(new File("outputs/parsed_docs/ft.json"));
+		Files.write(ftPath, "[".getBytes(), StandardOpenOption.CREATE);
+		Files.write(ftPath, ftDocs, Charset.forName("UTF-8"), StandardOpenOption.APPEND);;
+		Files.write(ftPath, "]".getBytes() , StandardOpenOption.APPEND);
 		System.out.println("Storing done!\n");
 	}
 }
