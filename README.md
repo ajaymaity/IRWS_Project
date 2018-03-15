@@ -13,7 +13,7 @@ Configure the project in Eclipse
 * Import the folder into Eclipse as a General project.
 * Convert the project into Java project by changing its facet.
 
-Configuring JAR libraries for the project
+Configure JAR libraries for the project
 --
 * Add External JARS to Eclipse project, all of which are present in ```./libs/``` directory.
 
