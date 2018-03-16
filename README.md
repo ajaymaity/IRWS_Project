@@ -28,3 +28,9 @@ Index the parsed documents
 * Run ```Indexer.java``` inside ```src/ie/tcd/```. The code indexes the parsed FT documents, and stores the index in ```outputs/indexes/ft.index/```.
 * You may specify an optional parsed document directory stored as JSON using the following command line arguments:<br/>
 ```java Indexer --docs <parsed_doc_file>```.
+
+Parse the topics
+--
+* Run ```ParseTopics.java``` inside ```src/ie/tcd/```. The code parses the topics, and stores the parsed content in ```outputs/parsed_topics/tops.json```.
+* You may specify an optional topic directory using the following command line arguments:<br/>
+```java ParseDocs --topics <topic_dir>```.

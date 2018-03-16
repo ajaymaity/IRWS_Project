@@ -3,7 +3,7 @@ package ie.tcd;
 import java.io.File;
 
 /**
- * Takes care of all the Errors that may occur while parsing the documents.
+ * Takes care of all the Errors that may occur while parsing the documents and queries.
  * @author Ajay Maity Local
  *
  */
@@ -103,6 +103,20 @@ public class Errors {
 	public static void printXXDoesNotMatchElement(String xxNext, String found, int lineNumber, File file) {
 		
 		System.out.println("XX Element expects " + xxNext + " next, but found " + found + " at line " + Integer.toString(lineNumber) + " of file " + file.getPath() + ".");
+		System.out.println("Exiting application.");
+		System.exit(1);
+	}
+	
+	/**
+	 * This error is thrown when a different element is found than what was expected while parsing topic.
+	 * @param expected the element that was expected
+	 * @param found the element that was actually found
+	 * @param lineNumber line number where this error occured
+	 * @param file file which has the error
+	 */
+	public static void printUnexpectedNextElement(String expected, String found, int lineNumber, File file) {
+		
+		System.out.println("Expected " + expected + " element next, but found " + found + " at line " + Integer.toString(lineNumber) + " of file " + file.getPath() + ".");
 		System.out.println("Exiting application.");
 		System.exit(1);
 	}

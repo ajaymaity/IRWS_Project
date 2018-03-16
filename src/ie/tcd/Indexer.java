@@ -31,51 +31,23 @@ public class Indexer {
 	private static final String ftDocStr = "ft";
 	
 	/**
-	 * Delete Directory from file system (will delete the contents recursively)
-	 * @param file directory or file to delete
-	 */
-	public static void deleteDir(File file) {
-		
-		File[] contents = file.listFiles();
-		if (contents != null) {
-			
-			for (File f: contents) {
-				
-				deleteDir(f);
-			}
-		}
-		file.delete();
-	}
-	
-	/**
 	 * Main Method
 	 * @param args Command line arguments
 	 * @throws IOException when files/directories are not present
 	 */
 	public static void main(String[] args) throws IOException {
 		
+		// Parse command line arguments
 		Map<String, String> values = new ParseCLA(args, "Indexer").parse();
 		String docsDirStr = values.get("docsDir");
-
-		docsDirStr = docsDirStr.replace("\\", "/");
-		if (!docsDirStr.endsWith("/")) docsDirStr += "/";
+		Utils utils = new Utils();
+		docsDirStr = utils.refineDirectoryString(docsDirStr);
 		
-		File docsDir = new File(docsDirStr);
-		if (!docsDir.isDirectory()) {
-			
-			System.out.println(docsDir + " is not a directory. Please input correct arguments, or run with default no arguments.");
-			System.out.println("Exiting application.");
-			System.exit(1);
-		}
+		// Check if all paths are valid and exist
+		utils.checkIfDirectory(docsDirStr);
+		utils.checkIfFile(docsDirStr + ftDocStr + ".json");
 		
-		File ftDocsFile = new File(docsDirStr + ftDocStr + ".json");
-		if (!ftDocsFile.isFile()) {
-			
-			System.out.println(ftDocsFile + " is not present. Please ensure parsed " + ftDocStr + ".json is present in the directory.");
-			System.out.println("Exiting application.");
-			System.exit(1);
-		}
-		
+		// Parse into JSON
 		JSONParser jsonParser = new JSONParser();
 		JSONArray ftDocs = null;
 		try {
@@ -94,8 +66,9 @@ public class Indexer {
 		// Create analyzer
 		Analyzer analyzer = new EnglishAnalyzer();
 		
+		// Delete previous index files
 		System.out.println("Deleting previous index files, if they exist...");
-		deleteDir(new File("./outputs/indexes/" + ftDocStr + ".index"));
+		utils.deleteDir(new File("./outputs/indexes/" + ftDocStr + ".index"));
 		System.out.println("Done!\n");
 		
 		// Store index on disk
@@ -105,9 +78,9 @@ public class Indexer {
 		IndexWriterConfig config = new IndexWriterConfig(analyzer);
 		config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
 		config.setSimilarity(new BM25Similarity());
-		
 		IndexWriter iwriter = new IndexWriter(directory, config);
 		
+		// Create index
 		System.out.println("Creating index using English analyzer and BM25 similarity...");		
 		for (Object obj : ftDocs) {
 				

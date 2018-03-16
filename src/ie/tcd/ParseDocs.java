@@ -3,7 +3,6 @@ package ie.tcd;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -23,102 +22,6 @@ import org.json.simple.JSONObject;
  *
  */
 public class ParseDocs {
-
-	/**
-	 * Load files from directory and return list of files.
-	 * @param directoryStr Root directory from where to get the files
-	 * @param hasSubDirectory True, if the root directory has sub-directories which has files. 
-	 * @return list of files
-	 */
-	private List<File> getFiles(String directoryStr, boolean hasSubDirectory) {
-		
-		List<File> filesList = new ArrayList<File>();
-		File directory = new File(directoryStr);
-
-		// Check if argument specified is a directory
-		if (directory.isDirectory()) {
-			
-			// List all sub-directories
-			String[] subDirectories = directory.list(new FilenameFilter() {
-				
-				@Override
-				public boolean accept(File dir, String name) {
-
-					File newFile = new File(dir, name);
-					if (hasSubDirectory) {
-					
-						// Only return files which is a directory
-						return newFile.isDirectory();
-					}
-					else {
-						
-						// Only return files which is not a directory
-						if (!newFile.isDirectory()) {
-
-							// Don't return files which has an extension
-							int idx = name.lastIndexOf('.');
-							if (idx > 0) return false;
-							else {
-								
-								filesList.add(newFile);
-								return true;
-							}
-						}
-						else return false;
-					}
-				}
-			});
-						
-			if (hasSubDirectory) {
-			
-				for (String subDirectoryStr:subDirectories) {
-					
-					File subDirectory = new File(directoryStr + subDirectoryStr);
-					// List all files inside the sub-directory
-					subDirectory.list(new FilenameFilter() {
-						
-						@Override
-						public boolean accept(File dir, String name) {
-	
-							File newFile = new File(dir, name);
-							// Return only files which is not a directory
-							if (!newFile.isDirectory()) {
-								
-								filesList.add(newFile);
-								return true;
-							}
-							else return false;
-						}
-					});
-				}
-			}
-		}
-		else {
-			
-			System.out.println(directory + " is not a directory.");
-			System.out.println("Exiting application.");
-			System.exit(1);
-		}
-
-		return filesList;
-	}
-	
-	/**
-	 * Delete Directory from file system (will delete the contents recursively)
-	 * @param file directory or file to delete
-	 */
-	public static void deleteDir(File file) {
-		
-		File[] contents = file.listFiles();
-		if (contents != null) {
-			
-			for (File f: contents) {
-				
-				deleteDir(f);
-			}
-		}
-		file.delete();
-	}
 	
 	/**
 	 * Parse the line which has opening and closing element on same line
@@ -142,20 +45,6 @@ public class ParseDocs {
 		}
 		return null;
 	}
-	
-	/**
-	 * Store the element value in FT document. Used only for multiple line contents
-	 * @param ftDoc the FT document map where the content has to be stored
-	 * @param line line which has the content
-	 * @param element element which maps to key in ftDoc where the contents will be stored
-	 */
-	private void storeContentinFTDoc(Map<String, String> ftDoc, String line, String element) {
-		
-		String currentHeadline = ftDoc.get(element.toLowerCase());
-		if (currentHeadline == null) currentHeadline = line + " ";
-		else currentHeadline += line + " ";
-		ftDoc.put(element.toLowerCase(), currentHeadline);
-	}
 		
 	/**
 	 * Parse Financial Times data
@@ -167,8 +56,9 @@ public class ParseDocs {
 	private List<String> parseFT(String ftDirectoryStr, boolean hasSubdirectory) throws IOException {
 		
 		List<String> ftDocs = new ArrayList<String>();
-		List<File> filesList = getFiles(ftDirectoryStr, hasSubdirectory);
+		List<File> filesList = (new Utils()).getFiles(ftDirectoryStr, hasSubdirectory);
 		
+		Utils utils = new Utils();
 		Map<String, String> ftDoc = null;
 		int docCount = 0;
 		// Loop through files
@@ -455,17 +345,17 @@ public class ParseDocs {
 					
 					if (docInProgress) { // Store contents inside DOC
 						
-						if (headlineInProgress) storeContentinFTDoc(ftDoc, line, "headline");
-						else if (textInProgress) storeContentinFTDoc(ftDoc, line, "text");
-						else if (pageInProgress) storeContentinFTDoc(ftDoc, line, "page");
-						else if (bylineInProgress) storeContentinFTDoc(ftDoc, line, "byline");
-						else if (datelineInProgress) storeContentinFTDoc(ftDoc, line, "dateline");
+						if (headlineInProgress) utils.storeContentInMap(ftDoc, line, "headline");
+						else if (textInProgress) utils.storeContentInMap(ftDoc, line, "text");
+						else if (pageInProgress) utils.storeContentInMap(ftDoc, line, "page");
+						else if (bylineInProgress) utils.storeContentInMap(ftDoc, line, "byline");
+						else if (datelineInProgress) utils.storeContentInMap(ftDoc, line, "dateline");
 						else if (xxInProgress) xxNext = line.split(":-")[0];
-						else if (coInProgress) storeContentinFTDoc(ftDoc, line, "co");
-						else if (cnInProgress) storeContentinFTDoc(ftDoc, line, "cn");
-						else if (inInProgress) storeContentinFTDoc(ftDoc, line, "in");
-						else if (tpInProgress) storeContentinFTDoc(ftDoc, line, "tp");
-						else if (peInProgress) storeContentinFTDoc(ftDoc, line, "pe");
+						else if (coInProgress) utils.storeContentInMap(ftDoc, line, "co");
+						else if (cnInProgress) utils.storeContentInMap(ftDoc, line, "cn");
+						else if (inInProgress) utils.storeContentInMap(ftDoc, line, "in");
+						else if (tpInProgress) utils.storeContentInMap(ftDoc, line, "tp");
+						else if (peInProgress) utils.storeContentInMap(ftDoc, line, "pe");
 						else {
 						
 							// Special case as file .\content\Assignment Two\Assignment Two\ft\ft923\ft923_39 contains a typo
@@ -495,13 +385,14 @@ public class ParseDocs {
 		
 		Map<String, String> values = new ParseCLA(args, "ParseDocs").parse();
 		String dataDir = values.get("dataDir");
+		Utils utils = new Utils();
+		dataDir = utils.refineDirectoryString(dataDir);
 		
-		ParseDocs fio = new ParseDocs();
-		dataDir = dataDir.replace("\\", "/");
-		if (!dataDir.endsWith("/")) dataDir += "/";
+		ParseDocs pd = new ParseDocs();
+		dataDir = utils.refineDirectoryString(dataDir);
 		String ftDirectoryStr = dataDir + "ft/";
 		System.out.println("Parsing FT documents...");
-		List<String> ftDocs = fio.parseFT(ftDirectoryStr, true);
+		List<String> ftDocs = pd.parseFT(ftDirectoryStr, true);
 		System.out.println("Parsing done!\n");
 		
 		// Create output directory if it does not exist
@@ -514,7 +405,7 @@ public class ParseDocs {
 		
 		System.out.println("Storing parsed FT doc...");
 		Path ftPath = Paths.get("outputs/parsed_docs/ft.json");
-		deleteDir(new File("outputs/parsed_docs/ft.json"));
+		utils.deleteDir(new File("outputs/parsed_docs/ft.json"));
 		Files.write(ftPath, "[".getBytes(), StandardOpenOption.CREATE);
 		Files.write(ftPath, ftDocs, Charset.forName("UTF-8"), StandardOpenOption.APPEND);;
 		Files.write(ftPath, "]".getBytes() , StandardOpenOption.APPEND);

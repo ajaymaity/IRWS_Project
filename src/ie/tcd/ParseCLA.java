@@ -35,9 +35,11 @@ public class ParseCLA {
 
 		options.addOption("h", "help", false, "Show help.");
 		if (this.fileName.contentEquals("ParseDocs"))
-			options.addOption("d", "data", true, "Directory where the data is present [Default: \"./contents/Assignment Two/Assignment Two/\"");
+			options.addOption("d", "data", true, "Directory where the data is present [Default: \"contents/Assignment Two/Assignment Two/\"");
 		else if (this.fileName.contentEquals("Indexer"))
-			options.addOption("d", "docs", true, "Directory where the parsed documents are present [Default: \"./outputs/parsed_docs/\"");
+			options.addOption("d", "docs", true, "Directory where the parsed documents are present [Default: \"outputs/parsed_docs/\"");
+		else if (this.fileName.contentEquals("ParseTopics")) 
+			options.addOption("t", "topics", true, "Directory where the topics are present [Default: \"contents/CS7IS3-Assignment2-Topics/\"");
 		else {
 			
 			System.out.println("Unexpected error while initializing command line arguments!");
@@ -62,9 +64,11 @@ public class ParseCLA {
 			
 			if (cmd.hasOption("h")) help();
 			if (this.fileName.contentEquals("ParseDocs"))
-				values.put("dataDir", cmd.getOptionValue("d", "./contents/Assignment Two/Assignment Two/"));
+				values.put("dataDir", cmd.getOptionValue("d", "contents/Assignment Two/Assignment Two/"));
 			else if (this.fileName.contentEquals("Indexer"))
-				values.put("docsDir", cmd.getOptionValue("d", "./outputs/parsed_docs/"));
+				values.put("docsDir", cmd.getOptionValue("d", "outputs/parsed_docs/"));
+			else if (this.fileName.contentEquals("ParseTopics")) 
+				values.put("topicDir", cmd.getOptionValue("t", "contents/CS7IS3-Assignment2-Topics/"));
 			else {
 				
 				System.out.println("Unexpected error while parsing command line arguments!");
