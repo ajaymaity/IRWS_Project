@@ -40,6 +40,11 @@ public class ParseCLA {
 			options.addOption("d", "docs", true, "Directory where the parsed documents are present [Default: \"outputs/parsed_docs/\"");
 		else if (this.fileName.contentEquals("ParseTopics")) 
 			options.addOption("t", "topics", true, "Directory where the topics are present [Default: \"contents/CS7IS3-Assignment2-Topics/\"");
+		else if (this.fileName.contentEquals("Searcher")) {
+			
+			options.addOption("i", "index", true, "Directory where the indexes are present [Default: \"outputs/indexes/\"");
+			options.addOption("t", "parsed-topics", true, "File path where the parsed topics are present [Default: \"outputs/parsed_topics/tops.json\"");
+		}
 		else {
 			
 			System.out.println("Unexpected error while initializing command line arguments!");
@@ -69,6 +74,11 @@ public class ParseCLA {
 				values.put("docsDir", cmd.getOptionValue("d", "outputs/parsed_docs/"));
 			else if (this.fileName.contentEquals("ParseTopics")) 
 				values.put("topicDir", cmd.getOptionValue("t", "contents/CS7IS3-Assignment2-Topics/"));
+			else if (this.fileName.contentEquals("Searcher")) {
+
+				values.put("indexDir", cmd.getOptionValue("i", "outputs/indexes/"));
+				values.put("parsedTopicFile", cmd.getOptionValue("t", "outputs/parsed_topics/tops.json"));
+			}				
 			else {
 				
 				System.out.println("Unexpected error while parsing command line arguments!");

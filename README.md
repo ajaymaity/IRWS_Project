@@ -34,3 +34,9 @@ Parse the topics
 * Run ```ParseTopics.java``` inside ```src/ie/tcd/```. The code parses the topics, and stores the parsed content in ```outputs/parsed_topics/tops.json```.
 * You may specify an optional topic directory using the following command line arguments:<br/>
 ```java ParseDocs --topics <topic_dir>```.
+
+Search the results
+--
+* Run ```Searcher.java``` inside ```src/ie/tcd/```. The code searches the index against each query generated from topics, and stores the results compatible with TREC Eval in ```outputs/results/search_results.txt```.
+* You may specify optional index directory and parsed topics file using the following command line arguments:<br/>
+```java Searcher --index <index_dir> --parsed-topics <parsed_topics_file>```.

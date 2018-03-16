@@ -68,7 +68,7 @@ public class Indexer {
 		
 		// Delete previous index files
 		System.out.println("Deleting previous index files, if they exist...");
-		utils.deleteDir(new File("./outputs/indexes/" + ftDocStr + ".index"));
+		utils.deleteDir(new File("outputs/indexes/" + ftDocStr + ".index"));
 		System.out.println("Done!\n");
 		
 		// Store index on disk

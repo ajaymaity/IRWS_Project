@@ -89,10 +89,10 @@ public class ParseTopics {
 										narrInProgress = false;
 										topInProgress = false;
 										if (partitions.length > 1) Errors.printUnexpectedErrorAndExit(line, lineNumber, file);
-										top.put("num", top.get("num").trim());
+										top.put("num", top.get("num").trim().substring("Number: ".length(), top.get("num").trim().length()));
 										top.put("title", top.get("title").trim());
-										top.put("desc", top.get("desc").trim());
-										top.put("narr", top.get("narr").trim());
+										top.put("desc", top.get("desc").trim().substring("Description: ".length(), top.get("desc").trim().length()));
+										top.put("narr", top.get("narr").trim().substring("Narrative: ".length(), top.get("narr").trim().length()));
 										
 										tops.add(new JSONObject(top).toString() + ",");
 										top = null;
