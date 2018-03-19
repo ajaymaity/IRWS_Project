@@ -65,6 +65,7 @@ public class Indexer {
 		
 		// Create analyzer
 		Analyzer analyzer = new EnglishAnalyzer();
+//		Analyzer analyzer = new CustomAnalyzer();
 		
 		// Delete previous index files
 		System.out.println("Deleting previous index files, if they exist...");
