@@ -1,6 +1,8 @@
 package ie.tcd;
 
 import org.apache.lucene.analysis.LowerCaseFilter;
+
+
 import org.apache.lucene.analysis.StopFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
@@ -14,6 +16,11 @@ import org.apache.lucene.analysis.en.PorterStemFilter;
 import org.apache.lucene.analysis.standard.ClassicFilter;
 import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
+
+/**
+ * Custom Analyzer using different filters available in Lucene
+ *
+ */
 
 public class CustomAnalyzer {
 	

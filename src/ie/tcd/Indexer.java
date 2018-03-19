@@ -78,6 +78,9 @@ public class Indexer {
 		// Create index writer
 		IndexWriterConfig config = new IndexWriterConfig(analyzer);
 		config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+		
+//		config.setSimilarity(new LMDirichletSimilarity());
+//		config.setSimilarity(new ClassicSimilarity());
 		config.setSimilarity(new BM25Similarity());
 		IndexWriter iwriter = new IndexWriter(directory, config);
 		

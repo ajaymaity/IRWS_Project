@@ -95,6 +95,7 @@ public class Searcher {
 		
 		// Create the same analyzer as the indexer
 		Analyzer analyzer = new EnglishAnalyzer();
+//		Analyzer analyzer = new CustomAnalyzer();
 		
 		// Get index from disk
 		Directory directory = FSDirectory.open(Paths.get(ftIndexDirStr));
@@ -103,6 +104,8 @@ public class Searcher {
 		// Create an index searcher
 		IndexSearcher isearcher = new IndexSearcher(ireader);
 		isearcher.setSimilarity(new BM25Similarity());
+//		config.setSimilarity(new LMDirichletSimilarity());
+//		config.setSimilarity(new ClassicSimilarity());
 		
 		List<String> resFileContent = new ArrayList<String>();
 		System.out.println("Searching index using English analyzer and BM25 similarity, with " + Integer.toString(HITS_PER_PAGE) + " hits per page.");
