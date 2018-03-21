@@ -44,7 +44,10 @@ public class Searcher {
 	private static final int HITS_PER_PAGE = 1000;
 	private static final String[] indexesStr = { "ft", "fr94", "fbis", "latimes" };
 	private static final String[][] allElements = { { "date", "dateline", "in", "profile", "cn", "docno", "co", "pe",
-			"text", "page", "tp", "pub", "headline", "byline" } };
+			"text", "page", "tp", "pub", "headline", "byline" },
+			{},
+			{},
+			{}};
 
 	/**
 	 * Main Method

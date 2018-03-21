@@ -501,7 +501,7 @@ public class ParseDocs {
 		Files.write(frPath, "]".getBytes(), StandardOpenOption.APPEND);
 		System.out.println("Storing done!\n");
 
-		parseFbis fbis = new parseFbis();
+		ParseFbis fbis = new ParseFbis();
 		fbis.parse();
 		
 		ParseLatimes lat = new ParseLatimes();

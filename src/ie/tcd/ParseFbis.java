@@ -18,7 +18,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class parseFbis {
+public class ParseFbis {
 
 	public void parse() throws URISyntaxException, IOException {
 		List<String> fbisDocs = new ArrayList<String>();
