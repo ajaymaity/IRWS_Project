@@ -1,4 +1,4 @@
-package src.ie.tcd;
+package ie.tcd;
 
 
 import org.json.JSONException;
