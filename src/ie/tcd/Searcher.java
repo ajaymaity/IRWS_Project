@@ -45,9 +45,9 @@ public class Searcher {
 	private static final String[] indexesStr = { "ft", "fr94", "fbis", "latimes" };
 	private static final String[][] allElements = { { "date", "dateline", "in", "profile", "cn", "docno", "co", "pe",
 			"text", "page", "tp", "pub", "headline", "byline" },
-			{},
-			{},
-			{}};
+			{"docno", "usdept", "agency", "usbureau", "doctitle", "summary", "supplem", "other"},
+			{"docno", "ht", "au", "date", "f", "text"},
+			{"docno", "headline", "paragraph", "date", "text"}};
 
 	/**
 	 * Main Method
