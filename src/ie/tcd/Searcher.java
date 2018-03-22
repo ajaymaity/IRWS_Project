@@ -42,12 +42,11 @@ import org.json.simple.parser.JSONParser;
 public class Searcher {
 
 	private static final int HITS_PER_PAGE = 1000;
-	private static final String[] indexesStr = { "ft", "fr94", "fbis", "latimes" };
-	private static final String[][] allElements = { { "date", "dateline", "in", "profile", "cn", "docno", "co", "pe",
-			"text", "page", "tp", "pub", "headline", "byline" },
-			{"docno", "usdept", "agency", "usbureau", "doctitle", "summary", "supplem", "other"},
-			{"docno", "ht", "au", "date", "f", "text"},
-			{"docno", "headline", "paragraph", "date", "text"}};
+	private static final String[] allElements = {"date", "dateline", "in", "profile", "cn", "docno", "co", "pe",
+			"text", "page", "tp", "pub", "headline", "byline",
+			"usdept", "agency", "usbureau", "doctitle", "summary", "supplem", "other",
+			"ht", "au", "f",
+			"paragraph"};
 
 	/**
 	 * Main Method
@@ -89,71 +88,69 @@ public class Searcher {
 		int index = 0;
 		List<String> resFileContent = new ArrayList<String>();
 		List<String> queryFileContent = new ArrayList<String>();
-		for (String indexStr : indexesStr) {
 
-			String[] elements = allElements[index++];
+		String[] elements = allElements;
 
-			// Check if all paths are valid and exist
-			String ftIndexDirStr = indexDirStr + "merged.index";
-			utils.checkIfDirectory(indexDirStr);
-			utils.checkIfDirectory(ftIndexDirStr);
-			utils.checkIfFile(parsedTopicFileStr);
+		// Check if all paths are valid and exist
+		String ftIndexDirStr = indexDirStr + "merged.index";
+		utils.checkIfDirectory(indexDirStr);
+		utils.checkIfDirectory(ftIndexDirStr);
+		utils.checkIfFile(parsedTopicFileStr);
 
-			// Parse into JSON
-			JSONParser jsonParser = new JSONParser();
-			JSONArray tops = null;
-			try {
+		// Parse into JSON
+		JSONParser jsonParser = new JSONParser();
+		JSONArray tops = null;
+		try {
 
-				System.out.println("Reading " + parsedTopicFileStr + "...");
-				tops = (JSONArray) jsonParser.parse(new FileReader(parsedTopicFileStr));
-			} catch (org.json.simple.parser.ParseException e) {
+			System.out.println("Reading " + parsedTopicFileStr + "...");
+			tops = (JSONArray) jsonParser.parse(new FileReader(parsedTopicFileStr));
+		} catch (org.json.simple.parser.ParseException e) {
 
-				System.out.println("Unable to parse " + parsedTopicFileStr + ". Please ensure the format is correct.");
-				System.out.println("Exiting application.");
-				System.exit(1);
-			}
-			System.out.println("Reading done.\n");
-
-			// Create the same analyzer as the indexer
-			Analyzer analyzer = new EnglishAnalyzer();
-
-			// Get index from disk
-			Directory directory = FSDirectory.open(Paths.get(ftIndexDirStr));
-			DirectoryReader ireader = DirectoryReader.open(directory);
-
-			// Create an index searcher
-			IndexSearcher isearcher = new IndexSearcher(ireader);
-			isearcher.setSimilarity(new BM25Similarity());
-
-			System.out.println("Searching index using English analyzer and BM25 similarity, with "
-					+ Integer.toString(HITS_PER_PAGE) + " hits per page.");
-			// Loop through all queries and retrieve documents
-			for (Object obj : tops) {
-
-				JSONObject top = (JSONObject) obj;
-				String queryStr = (String) top.get("num") + " " + (String) top.get("title") + " "
-						+ (String) top.get("desc") + " " + (String) top.get("narr");
-				queryFileContent.add(queryStr);
-				
-				queryStr = queryStr.replace("/", "\\/");
-				MultiFieldQueryParser queryParser = new MultiFieldQueryParser(elements, analyzer);
-				Query query = queryParser.parse(queryStr);
-
-				// Search
-				TopDocs topDocs = isearcher.search(query, HITS_PER_PAGE);
-				ScoreDoc[] hits = topDocs.scoreDocs;
-
-				// Retrieve results
-				for (int j = 0; j < hits.length; j++) {
-
-					int docId = hits[j].doc;
-					Document doc = isearcher.doc(docId);
-					resFileContent.add(
-							(String) top.get("num") + " 0 " + doc.get("docno") + " 0 " + hits[j].score + " STANDARD");
-				}
-			}
-			System.out.println("Searching done!\n");
+			System.out.println("Unable to parse " + parsedTopicFileStr + ". Please ensure the format is correct.");
+			System.out.println("Exiting application.");
+			System.exit(1);
 		}
+		System.out.println("Reading done.\n");
+
+		// Create the same analyzer as the indexer
+		Analyzer analyzer = new EnglishAnalyzer();
+
+		// Get index from disk
+		Directory directory = FSDirectory.open(Paths.get(ftIndexDirStr));
+		DirectoryReader ireader = DirectoryReader.open(directory);
+
+		// Create an index searcher
+		IndexSearcher isearcher = new IndexSearcher(ireader);
+		isearcher.setSimilarity(new BM25Similarity());
+
+		System.out.println("Searching index using English analyzer and BM25 similarity, with "
+				+ Integer.toString(HITS_PER_PAGE) + " hits per page.");
+		// Loop through all queries and retrieve documents
+		for (Object obj : tops) {
+
+			JSONObject top = (JSONObject) obj;
+			String queryStr = (String) top.get("num") + " " + (String) top.get("title") + " "
+					+ (String) top.get("desc") + " " + (String) top.get("narr");
+			queryFileContent.add(queryStr);
+			
+			queryStr = queryStr.replace("/", "\\/");
+			MultiFieldQueryParser queryParser = new MultiFieldQueryParser(elements, analyzer);
+			Query query = queryParser.parse(queryStr);
+
+			// Search
+			TopDocs topDocs = isearcher.search(query, HITS_PER_PAGE);
+			ScoreDoc[] hits = topDocs.scoreDocs;
+
+			// Retrieve results
+			for (int j = 0; j < hits.length; j++) {
+
+				int docId = hits[j].doc;
+				Document doc = isearcher.doc(docId);
+				resFileContent.add(
+						(String) top.get("num") + " 0 " + doc.get("docno") + " 0 " + hits[j].score + " STANDARD");
+			}
+		}
+		System.out.println("Searching done!\n");
 		
 		System.out.println("Writing queries to file...");
 		Files.write(Paths.get("outputs/final_queries/queries.txt"), queryFileContent, Charset.forName("UTF-8"),
