@@ -504,7 +504,7 @@ public class ParseDocs {
 		ParseFbis fbis = new ParseFbis();
 		fbis.parse();
 		
-		ParseLatimes lat = new ParseLatimes();
-		lat.parse();
+//		ParseLatimes lat = new ParseLatimes();
+//		lat.parse();
 	}
 }
