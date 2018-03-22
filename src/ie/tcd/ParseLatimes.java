@@ -5,7 +5,12 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ParseLatimes {
 	@SuppressWarnings({ "unchecked", "null" })
@@ -16,10 +21,13 @@ public class ParseLatimes {
 		File[] files = file.listFiles();
 
 		String jsonString = null;
-		FileWriter pw = new FileWriter(new File("./outputs/parsed_docs/latimes.json"));
-
+		List<String> pw = new ArrayList<String>();
+//		FileWriter pw = new FileWriter(new File("./outputs/parsed_docs/latimes.json"));
+		Path ftPath = Paths.get("./outputs/parsed_docs/latimes.json");
+		Files.write(ftPath, "[".getBytes(), StandardOpenOption.CREATE);
+		
 		// files.length
-		pw.write("[");
+//		pw.write("[");
 		for (int i = 0; i < files.length; i++) {
 			StringBuilder content = new StringBuilder();
 			// System.out.println("File name : " + files[i]);
@@ -39,8 +47,7 @@ public class ParseLatimes {
 
 					// System.out.println(content);
 					try {
-						pw.write(jsonString);
-						pw.write(",");
+						pw.add(jsonString + ",");
 						// System.out.println("Copying contents to the JSON file...");
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -51,6 +58,6 @@ public class ParseLatimes {
 			// pw.close();
 
 		}
-		pw.write("]");
+		Files.write(ftPath, "]".getBytes(), StandardOpenOption.APPEND);
 	}
 }
