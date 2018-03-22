@@ -47,7 +47,6 @@ public class ParseLatimes {
 					content.setLength(0);
 				}
 			}
-
 			// pw.close();
 
 		}
