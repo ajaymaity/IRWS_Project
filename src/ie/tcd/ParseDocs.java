@@ -470,7 +470,7 @@ public class ParseDocs {
 		dataDir = utils.refineDirectoryString(dataDir);
 		String ftDirectoryStr = dataDir + "ft/";
 		System.out.println("Parsing FT documents...");
-//		List<String> ftDocs = pd.parseFT(ftDirectoryStr, true);
+		List<String> ftDocs = pd.parseFT(ftDirectoryStr, true);
 		System.out.println("Parsing done!\n");
 
 		// Create output directory if it does not exist
@@ -483,27 +483,27 @@ public class ParseDocs {
 		if (!parsedDocsDir.exists())
 			parsedDocsDir.mkdir();
 
-//		System.out.println("Storing parsed FT doc...");
-//		Path ftPath = Paths.get("outputs/parsed_docs/ft.json");
-//		utils.deleteDir(new File("outputs/parsed_docs/ft.json"));
-//		Files.write(ftPath, "[".getBytes(), StandardOpenOption.CREATE);
-//		Files.write(ftPath, ftDocs, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
-//		Files.write(ftPath, "]".getBytes(), StandardOpenOption.APPEND);
-//		System.out.println("Storing done!\n");
-//
-//		ParseFR94 fr94 = new ParseFR94();
-//		File[] files = new File("./contents/Assignment Two/Assignment Two/fr94/").listFiles();
-//		System.out.println("Storing parsed FR94 doc...");
-//		utils.deleteDir(new File("outputs/parsed_docs/fr94.json"));
-//		fr94.fileAcces(files);
-//		Path frPath = Paths.get("outputs/parsed_docs/fr94.json");
-//		Files.write(frPath, "]".getBytes(), StandardOpenOption.APPEND);
-//		System.out.println("Storing done!\n");
-//
-//		System.out.println("Parsing FBIS...");
-//		ParseFbis fbis = new ParseFbis();
-//		fbis.parse();
-//		System.out.println("Done!");
+		System.out.println("Storing parsed FT doc...");
+		Path ftPath = Paths.get("outputs/parsed_docs/ft.json");
+		utils.deleteDir(new File("outputs/parsed_docs/ft.json"));
+		Files.write(ftPath, "[".getBytes(), StandardOpenOption.CREATE);
+		Files.write(ftPath, ftDocs, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
+		Files.write(ftPath, "]".getBytes(), StandardOpenOption.APPEND);
+		System.out.println("Storing done!\n");
+
+		ParseFR94 fr94 = new ParseFR94();
+		File[] files = new File("./contents/Assignment Two/Assignment Two/fr94/").listFiles();
+		System.out.println("Storing parsed FR94 doc...");
+		utils.deleteDir(new File("outputs/parsed_docs/fr94.json"));
+		fr94.fileAcces(files);
+		Path frPath = Paths.get("outputs/parsed_docs/fr94.json");
+		Files.write(frPath, "]".getBytes(), StandardOpenOption.APPEND);
+		System.out.println("Storing done!\n");
+
+		System.out.println("Parsing FBIS...");
+		ParseFbis fbis = new ParseFbis();
+		fbis.parse();
+		System.out.println("Done!");
 
 		System.out.println("Parsing Latimes...");
 		ParseLatimes lat = new ParseLatimes();
