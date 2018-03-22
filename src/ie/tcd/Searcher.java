@@ -75,6 +75,11 @@ public class Searcher {
 		File parsedResDir = new File("outputs/results");
 		if (!parsedResDir.exists())
 			parsedResDir.mkdir();
+	
+		// Create a directory to store final queries
+		File finalQueriesDir = new File("outputs/final_queries");
+		if (!finalQueriesDir.exists())
+			finalQueriesDir.mkdir();
 
 		// Delete previous results files
 		System.out.println("Deleting previous results files, if they exist...");
@@ -83,6 +88,7 @@ public class Searcher {
 
 		int index = 0;
 		List<String> resFileContent = new ArrayList<String>();
+		List<String> queryFileContent = new ArrayList<String>();
 		for (String indexStr : indexesStr) {
 
 			String[] elements = allElements[index++];
@@ -127,7 +133,8 @@ public class Searcher {
 				JSONObject top = (JSONObject) obj;
 				String queryStr = (String) top.get("num") + " " + (String) top.get("title") + " "
 						+ (String) top.get("desc") + " " + (String) top.get("narr");
-
+				queryFileContent.add(queryStr);
+				
 				queryStr = queryStr.replace("/", "\\/");
 				MultiFieldQueryParser queryParser = new MultiFieldQueryParser(elements, analyzer);
 				Query query = queryParser.parse(queryStr);
@@ -147,6 +154,11 @@ public class Searcher {
 			}
 			System.out.println("Searching done!\n");
 		}
+		
+		System.out.println("Writing queries to file...");
+		Files.write(Paths.get("outputs/final_queries/queries.txt"), queryFileContent, Charset.forName("UTF-8"),
+				StandardOpenOption.CREATE_NEW);
+		System.out.println("Results written to outputs/results/search_results.txt to be used in TREC Eval.");
 
 		System.out.println("Writing results to file...");
 		Files.write(Paths.get("outputs/results/search_results.txt"), resFileContent, Charset.forName("UTF-8"),
