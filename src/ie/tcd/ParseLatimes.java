@@ -19,6 +19,7 @@ public class ParseLatimes {
 		FileWriter pw = new FileWriter(new File("./outputs/parsed_docs/latimes.json"));
 
 		// files.length
+		pw.write("[");
 		for (int i = 0; i < files.length; i++) {
 			StringBuilder content = new StringBuilder();
 			// System.out.println("File name : " + files[i]);
@@ -50,5 +51,6 @@ public class ParseLatimes {
 			// pw.close();
 
 		}
+		pw.write("]");
 	}
 }
