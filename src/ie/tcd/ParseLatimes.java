@@ -15,9 +15,13 @@ public class ParseLatimes {
 
 		File[] files = file.listFiles();
 
+		String jsonString = null;
+		FileWriter pw = new FileWriter(new File("./outputs/parsed_docs/latimes.json"));
+
+		// files.length
 		for (int i = 0; i < files.length; i++) {
 			StringBuilder content = new StringBuilder();
-			System.out.println("File name : " + files[i]);
+			// System.out.println("File name : " + files[i]);
 			BufferedReader br = new BufferedReader(new FileReader(files[i]));
 			ArrayList<String> arr = new ArrayList<String>();
 			String st;
@@ -25,32 +29,25 @@ public class ParseLatimes {
 				content.append(st);
 				if (st.startsWith("</DOC>")) {
 					arr.add(content.toString());
-//					content.setLength(0);
+					Document htmlObj = Jsoup.parse(content.toString());
+					jsonString = new JSONObject().put("headline", htmlObj.getElementsByTag("headline").text())
+							.put("paragraph", htmlObj.getElementsByTag("p").text())
+							.put("date", htmlObj.getElementsByTag("date").text())
+							.put("docno", htmlObj.getElementsByTag("docno").text())
+							.put("text", htmlObj.getElementsByTag("text").text()).toString();
+
+					// System.out.println(content);
+					try {
+						pw.write(jsonString);
+						// System.out.println("Copying contents to the JSON file...");
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					content.setLength(0);
 				}
 			}
 
-			// System.out.println(arr.size());
-			String jsonString = null;
-//			FileOutputStream out = new FileOutputStream("./outputs/parsed_docs/latimes.json");
-			FileWriter pw = new FileWriter("./outputs/parsed_docs/latimes.json");
-
-			for (String s : arr) {
-				Document htmlObj = Jsoup.parse(s);
-				jsonString = new JSONObject().put("headline", htmlObj.getElementsByTag("headline").text())
-						.put("paragraph", htmlObj.getElementsByTag("p").text())
-						.put("date", htmlObj.getElementsByTag("date").text())
-						.put("docno", htmlObj.getElementsByTag("docno").text())
-						.put("text", htmlObj.getElementsByTag("text").text()).toString();
-				System.out.println(jsonString);
-				try {
-					pw.write(jsonString);
-					//pw.flush();
-					//System.out.println("Copying contents to the JSON file...");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			pw.close();
+			// pw.close();
 
 		}
 	}
