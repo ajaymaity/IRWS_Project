@@ -94,7 +94,7 @@ public class Searcher {
 			String[] elements = allElements[index++];
 
 			// Check if all paths are valid and exist
-			String ftIndexDirStr = indexDirStr + indexStr + ".index";
+			String ftIndexDirStr = indexDirStr + "merged.index";
 			utils.checkIfDirectory(indexDirStr);
 			utils.checkIfDirectory(ftIndexDirStr);
 			utils.checkIfFile(parsedTopicFileStr);
