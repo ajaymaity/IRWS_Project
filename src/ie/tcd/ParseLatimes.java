@@ -40,6 +40,7 @@ public class ParseLatimes {
 					// System.out.println(content);
 					try {
 						pw.write(jsonString);
+						pw.write(",");
 						// System.out.println("Copying contents to the JSON file...");
 					} catch (Exception e) {
 						e.printStackTrace();
