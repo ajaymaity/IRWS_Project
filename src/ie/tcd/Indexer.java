@@ -63,6 +63,7 @@ public class Indexer {
 		IndexWriterConfig config = new IndexWriterConfig(analyzer);
 		config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
 		config.setSimilarity(new BM25Similarity());
+		config.setRAMBufferSizeMB(50);
 		IndexWriter iwriter = new IndexWriter(directory, config);
 
 		for (String docStr : docsStr) {
