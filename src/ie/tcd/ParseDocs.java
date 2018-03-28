@@ -461,17 +461,13 @@ public class ParseDocs {
 	 */
 	public static void main(String[] args) throws Exception {
 
+		// Parse Command line arguments
 		Map<String, String> values = new ParseCLA(args, "ParseDocs").parse();
 		String dataDir = values.get("dataDir");
+
+		// Refine the directory string value
 		Utils utils = new Utils();
 		dataDir = utils.refineDirectoryString(dataDir);
-
-		ParseDocs pd = new ParseDocs();
-		dataDir = utils.refineDirectoryString(dataDir);
-		String ftDirectoryStr = dataDir + "ft/";
-		System.out.println("Parsing FT documents...");
-		List<String> ftDocs = pd.parseFT(ftDirectoryStr, true);
-		System.out.println("Parsing done!\n");
 
 		// Create output directory if it does not exist
 		File outputDir = new File("outputs");
@@ -483,6 +479,14 @@ public class ParseDocs {
 		if (!parsedDocsDir.exists())
 			parsedDocsDir.mkdir();
 
+		// Parse and Store FT documents
+		ParseDocs pd = new ParseDocs();
+		dataDir = utils.refineDirectoryString(dataDir);
+		String ftDirectoryStr = dataDir + "ft/";
+		System.out.println("Parsing FT documents...");
+		List<String> ftDocs = pd.parseFT(ftDirectoryStr, true);
+		System.out.println("Parsing done!");
+
 		System.out.println("Storing parsed FT doc...");
 		Path ftPath = Paths.get("outputs/parsed_docs/ft.json");
 		utils.deleteDir(new File("outputs/parsed_docs/ft.json"));
@@ -491,6 +495,7 @@ public class ParseDocs {
 		Files.write(ftPath, "]".getBytes(), StandardOpenOption.APPEND);
 		System.out.println("Storing done!\n");
 
+		// Parse and Store FR94 documents
 		ParseFR94 fr94 = new ParseFR94();
 		File[] files = new File("./contents/Assignment Two/Assignment Two/fr94/").listFiles();
 		System.out.println("Storing parsed FR94 doc...");
@@ -500,14 +505,16 @@ public class ParseDocs {
 		Files.write(frPath, "]".getBytes(), StandardOpenOption.APPEND);
 		System.out.println("Storing done!\n");
 
+		// Parse and Store FBIS documents
 		System.out.println("Parsing FBIS...");
 		ParseFbis fbis = new ParseFbis();
 		fbis.parse();
-		System.out.println("Done!");
+		System.out.println("Done!\n");
 
+		// Parse and Store LaTimes documents
 		System.out.println("Parsing Latimes...");
 		ParseLatimes lat = new ParseLatimes();
 		lat.parse();
-		System.out.println("Done!");
+		System.out.println("Done!\n");
 	}
 }
