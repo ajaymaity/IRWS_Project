@@ -47,6 +47,33 @@ public class Searcher {
 			"usdept", "agency", "usbureau", "doctitle", "summary", "supplem", "other",
 			"ht", "au", "f",
 			"paragraph"};
+	
+	/**
+	 * Create query from topic
+	 * @param top the topic JSON to create query from
+	 * @return the query string created from the topic JSON
+	 */
+	private static String createQuery(JSONObject top) {
+		
+		// Concatenate the four elements
+		String queryStr = (String) top.get("num") + " " + (String) top.get("title") + " "
+				+ (String) top.get("desc") + " " + (String) top.get("narr");
+
+		// Consider desc and narr elements
+//		String queryStr = (String) top.get("desc") + " " + (String) top.get("narr");
+
+		// Consider only desc
+//		String queryStr = (String) top.get("desc");
+		
+		// Consider only narr
+//		String queryStr = (String) top.get("narr");
+		
+		// Consider num, desc and narr elements
+//		String queryStr = (String) top.get("num") + " "
+//				+ (String) top.get("desc") + " " + (String) top.get("narr");
+		
+		return queryStr;
+	}
 
 	/**
 	 * Main Method
@@ -134,8 +161,8 @@ public class Searcher {
 		for (Object obj : tops) {
 
 			JSONObject top = (JSONObject) obj;
-			String queryStr = (String) top.get("num") + " " + (String) top.get("title") + " "
-					+ (String) top.get("desc") + " " + (String) top.get("narr");
+			
+			String queryStr = createQuery(top);
 			queryFileContent.add(queryStr);
 			
 			queryStr = queryStr.replace("/", "\\/");
@@ -152,7 +179,7 @@ public class Searcher {
 				int docId = hits[j].doc;
 				Document doc = isearcher.doc(docId);
 				resFileContent.add(
-						(String) top.get("num") + " 0 " + doc.get("docno") + " 0 " + hits[j].score + " STANDARD");
+						(String) top.get("num") + " 0 " + doc.get("docno").toUpperCase() + " 0 " + hits[j].score + " STANDARD");
 			}
 		}
 		System.out.println("Searching done!\n");
