@@ -84,6 +84,11 @@ public class Searcher {
 		System.out.println("Deleting previous results files, if they exist...");
 		utils.deleteDir(new File("outputs/results/search_results.txt"));
 		System.out.println("Done!\n");
+		
+		// Delete previous final queries files
+		System.out.println("Deleting previous final queries files, if they exist...");
+		utils.deleteDir(new File("outputs/final_queries/queries.txt"));
+		System.out.println("Done!\n");
 
 		int index = 0;
 		List<String> resFileContent = new ArrayList<String>();

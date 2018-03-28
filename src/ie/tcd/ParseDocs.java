@@ -478,6 +478,12 @@ public class ParseDocs {
 		File parsedDocsDir = new File("outputs/parsed_docs");
 		if (!parsedDocsDir.exists())
 			parsedDocsDir.mkdir();
+		
+		// Delete old JSON files
+		utils.deleteDir(new File("outputs/parsed_docs/ft.json"));
+		utils.deleteDir(new File("outputs/parsed_docs/fr94.json"));
+		utils.deleteDir(new File("outputs/parsed_docs/fbis.json"));
+		utils.deleteDir(new File("outputs/parsed_docs/latimes.json"));
 
 		// Parse and Store FT documents
 		ParseDocs pd = new ParseDocs();
@@ -486,10 +492,8 @@ public class ParseDocs {
 		System.out.println("Parsing FT documents...");
 		List<String> ftDocs = pd.parseFT(ftDirectoryStr, true);
 		System.out.println("Parsing done!");
-
 		System.out.println("Storing parsed FT doc...");
 		Path ftPath = Paths.get("outputs/parsed_docs/ft.json");
-		utils.deleteDir(new File("outputs/parsed_docs/ft.json"));
 		Files.write(ftPath, "[".getBytes(), StandardOpenOption.CREATE);
 		Files.write(ftPath, ftDocs, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
 		Files.write(ftPath, "]".getBytes(), StandardOpenOption.APPEND);
@@ -497,9 +501,8 @@ public class ParseDocs {
 
 		// Parse and Store FR94 documents
 		ParseFR94 fr94 = new ParseFR94();
-		File[] files = new File("./contents/Assignment Two/Assignment Two/fr94/").listFiles();
+		File[] files = new File(dataDir + "fr94/").listFiles();
 		System.out.println("Storing parsed FR94 doc...");
-		utils.deleteDir(new File("outputs/parsed_docs/fr94.json"));
 		fr94.fileAcces(files);
 		Path frPath = Paths.get("outputs/parsed_docs/fr94.json");
 		Files.write(frPath, "]".getBytes(), StandardOpenOption.APPEND);
