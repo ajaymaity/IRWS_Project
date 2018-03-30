@@ -42,36 +42,38 @@ import org.json.simple.parser.JSONParser;
 public class Searcher {
 
 	private static final int HITS_PER_PAGE = 1000;
-	private static final String[] allElements = {"date", "dateline", "in", "profile", "cn", "docno", "co", "pe",
-			"text", "page", "tp", "pub", "headline", "byline",
-			"usdept", "agency", "usbureau", "doctitle", "summary", "supplem", "other",
-			"ht", "au", "f",
-			"paragraph"};
-	
+
+	private static final String[] allElements = { "date", "dateline", "in", "profile", "cn", "docno", "co", "pe",
+			"text", "page", "tp", "pub", "headline", "byline", "usdept", "agency", "usbureau", "doctitle", "summary",
+			"supplem", "other", "ht", "au", "f", "paragraph", "header", "date1", "h1", "h2", "h3", "h4", "h5", "h6",
+			"fp100", "fp101", "fp102", "fp103", "fp104", "fp105", "fp106", "abs" };
+
 	/**
 	 * Create query from topic
-	 * @param top the topic JSON to create query from
+	 * 
+	 * @param top
+	 *            the topic JSON to create query from
 	 * @return the query string created from the topic JSON
 	 */
 	private static String createQuery(JSONObject top) {
-		
+
 		// Concatenate the four elements
-		String queryStr = (String) top.get("num") + " " + (String) top.get("title") + " "
-				+ (String) top.get("desc") + " " + (String) top.get("narr");
+		String queryStr = (String) top.get("num") + " " + (String) top.get("title") + " " + (String) top.get("desc")
+				+ " " + (String) top.get("narr");
 
 		// Consider desc and narr elements
-//		String queryStr = (String) top.get("desc") + " " + (String) top.get("narr");
+		// String queryStr = (String) top.get("desc") + " " + (String) top.get("narr");
 
 		// Consider only desc
-//		String queryStr = (String) top.get("desc");
-		
+		// String queryStr = (String) top.get("desc");
+
 		// Consider only narr
-//		String queryStr = (String) top.get("narr");
-		
+		// String queryStr = (String) top.get("narr");
+
 		// Consider num, desc and narr elements
-//		String queryStr = (String) top.get("num") + " "
-//				+ (String) top.get("desc") + " " + (String) top.get("narr");
-		
+		// String queryStr = (String) top.get("num") + " "
+		// + (String) top.get("desc") + " " + (String) top.get("narr");
+
 		return queryStr;
 	}
 
@@ -101,7 +103,7 @@ public class Searcher {
 		File parsedResDir = new File("outputs/results");
 		if (!parsedResDir.exists())
 			parsedResDir.mkdir();
-	
+
 		// Create a directory to store final queries
 		File finalQueriesDir = new File("outputs/final_queries");
 		if (!finalQueriesDir.exists())
@@ -111,7 +113,7 @@ public class Searcher {
 		System.out.println("Deleting previous results files, if they exist...");
 		utils.deleteDir(new File("outputs/results/search_results.txt"));
 		System.out.println("Done!\n");
-		
+
 		// Delete previous final queries files
 		System.out.println("Deleting previous final queries files, if they exist...");
 		utils.deleteDir(new File("outputs/final_queries/queries.txt"));
@@ -161,10 +163,10 @@ public class Searcher {
 		for (Object obj : tops) {
 
 			JSONObject top = (JSONObject) obj;
-			
+
 			String queryStr = createQuery(top);
 			queryFileContent.add(queryStr);
-			
+
 			queryStr = queryStr.replace("/", "\\/");
 			MultiFieldQueryParser queryParser = new MultiFieldQueryParser(elements, analyzer);
 			Query query = queryParser.parse(queryStr);
@@ -178,12 +180,12 @@ public class Searcher {
 
 				int docId = hits[j].doc;
 				Document doc = isearcher.doc(docId);
-				resFileContent.add(
-						(String) top.get("num") + " 0 " + doc.get("docno").toUpperCase() + " 0 " + hits[j].score + " STANDARD");
+				resFileContent.add((String) top.get("num") + " 0 " + doc.get("docno").toUpperCase() + " 0 "
+						+ hits[j].score + " STANDARD");
 			}
 		}
 		System.out.println("Searching done!\n");
-		
+
 		System.out.println("Writing queries to file...");
 		Files.write(Paths.get("outputs/final_queries/queries.txt"), queryFileContent, Charset.forName("UTF-8"),
 				StandardOpenOption.CREATE_NEW);

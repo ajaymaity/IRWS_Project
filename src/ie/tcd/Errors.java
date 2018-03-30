@@ -126,6 +126,8 @@ public class Errors {
 		System.out.println("*****Can't parse the following line (line number: " + Integer.toString(lineNumber)
 				+ ", file: " + file.getPath() + ")*****");
 		System.out.println(line + "\n");
+		System.out.println("Exiting application");
+		System.exit(1);
 	}
 
 	/**
@@ -146,6 +148,39 @@ public class Errors {
 		System.out.println("XX Element expects " + xxNext + " next, but found " + found + " at line "
 				+ Integer.toString(lineNumber) + " of file " + file.getPath() + ".");
 		System.out.println("Exiting application.");
+		System.exit(1);
+	}
+
+	/**
+	 * This error is thrown when parent expects one of expected elements but found
+	 * 'found' element.
+	 * 
+	 * @param expected
+	 *            the elements expected by parent
+	 * @param parent
+	 *            the parent which is expecting
+	 * @param found
+	 *            the element that was found
+	 * @param lineNumber
+	 *            line number where this error occured
+	 * @param file
+	 *            file which has the error
+	 */
+	public static void printOneOfExpectedElements(String[] expected, String parent, String found, int lineNumber,
+			File file) {
+
+		String expectedStr = "";
+		for (int i = 0; i < expected.length; i++) {
+
+			if (i == expected.length - 1)
+				expectedStr += expected[i];
+			else
+				expectedStr += expected[i] + ", ";
+		}
+
+		System.out.println(parent + " element expects one of " + expectedStr + ", but found " + found + " at line "
+				+ Integer.toString(lineNumber) + " of file " + file.getPath() + ".");
+		System.out.println("Exiting application");
 		System.exit(1);
 	}
 

@@ -107,6 +107,7 @@ public class Utils {
 				@Override
 				public boolean accept(File dir, String name) {
 
+					if (name.contains("read")) return false;
 					File newFile = new File(dir, name);
 					if (hasSubDirectory) {
 
@@ -176,6 +177,6 @@ public class Utils {
 			currentHeadline = line + " ";
 		else
 			currentHeadline += line + " ";
-		map.put(element.toLowerCase(), currentHeadline);
+		map.put(element.toLowerCase(), currentHeadline.replaceAll(" +", " "));
 	}
 }

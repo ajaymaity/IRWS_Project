@@ -37,9 +37,12 @@ public class ParseCLA {
 		this.fileName = fileName;
 
 		options.addOption("h", "help", false, "Show help.");
-		if (this.fileName.contentEquals("ParseDocs"))
-			options.addOption("d", "data", true,
-					"Directory where the data is present [Default: \"contents/Assignment Two/Assignment Two/\"");
+		if (this.fileName.contentEquals("ParseDocs")) {
+				options.addOption("d", "data", true,
+						"Directory where the data is present [Default: \"contents/Assignment Two/Assignment Two/\"");
+				options.addOption("o", "output", true,
+						"Directory where the output will be stored [Default: \"outputs/parsed_docs/\"");
+		}
 		else if (this.fileName.contentEquals("Indexer"))
 			options.addOption("d", "docs", true,
 					"Directory where the parsed documents are present [Default: \"outputs/parsed_docs/\"");
@@ -77,8 +80,11 @@ public class ParseCLA {
 
 			if (cmd.hasOption("h"))
 				help();
-			if (this.fileName.contentEquals("ParseDocs"))
+			if (this.fileName.contentEquals("ParseDocs")) {
+
 				values.put("dataDir", cmd.getOptionValue("d", "contents/Assignment Two/Assignment Two/"));
+				values.put("outputDir", cmd.getOptionValue("o", "outputs/parsed_docs/"));
+			}
 			else if (this.fileName.contentEquals("Indexer"))
 				values.put("docsDir", cmd.getOptionValue("d", "outputs/parsed_docs/"));
 			else if (this.fileName.contentEquals("ParseTopics"))
