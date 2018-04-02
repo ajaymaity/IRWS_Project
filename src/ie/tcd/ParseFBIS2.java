@@ -92,7 +92,7 @@ public class ParseFBIS2 {
 		System.out.println("Number of files: " + Integer.toString(filesList.size()));
 		for (File file : filesList) {
 
-			System.out.println("FBIS File: " + Integer.toString(++fileCount));
+			System.out.println("FBIS File: " + Integer.toString(++fileCount) + " / " + Integer.toString(filesList.size()));
 			FileReader fileReader = new FileReader(file);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 

@@ -67,19 +67,6 @@ public class ParseDocs {
 		Files.write(ftPath, "]".getBytes(), StandardOpenOption.APPEND);
 		System.out.println("Storing done!\n");
 
-		// Parse and Store FBIS documents
-//		ParseFBIS2 pfbis = new ParseFBIS2();
-//		String fbisDirectoryStr = dataDir + "fbis/";
-//		System.out.println("Parsing FBIS documents...");
-//		List<String> fbisDocs = pfbis.parse(fbisDirectoryStr, false);
-//		System.out.println("Parsing done!");
-//		System.out.println("Storing parsed FBIS doc...");
-//		Path fbisPath = Paths.get(outputDirStr + "fbis.json");
-//		Files.write(fbisPath, "[".getBytes(), StandardOpenOption.CREATE);
-//		Files.write(fbisPath, fbisDocs, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
-//		Files.write(fbisPath, "]".getBytes(), StandardOpenOption.APPEND);
-//		System.out.println("Storing done!\n");
-
 		// Parse and Store FR94 documents
 		ParseFR94 fr94 = new ParseFR94();
 		File[] files = new File(dataDir + "fr94/").listFiles();
@@ -94,6 +81,18 @@ public class ParseDocs {
 		ParseFbis fbis = new ParseFbis();
 		fbis.parse();
 		System.out.println("Done!\n");
+		
+//		ParseFBIS2 pfbis = new ParseFBIS2();
+//		String fbisDirectoryStr = dataDir + "fbis/";
+//		System.out.println("Parsing FBIS documents...");
+//		List<String> fbisDocs = pfbis.parse(fbisDirectoryStr, false);
+//		System.out.println("Parsing done!");
+//		System.out.println("Storing parsed FBIS doc...");
+//		Path fbisPath = Paths.get(outputDirStr + "fbis.json");
+//		Files.write(fbisPath, "[".getBytes(), StandardOpenOption.CREATE);
+//		Files.write(fbisPath, fbisDocs, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
+//		Files.write(fbisPath, "]".getBytes(), StandardOpenOption.APPEND);
+//		System.out.println("Storing done!\n");
 
 		// Parse and Store LaTimes documents
 		System.out.println("Parsing Latimes...");

@@ -49,8 +49,20 @@ public class Searcher {
 //			"text", "page", "tp", "pub", "headline", "byline", "usdept", "agency", "usbureau", "doctitle", "summary",
 //			"supplem", "other", "ht", "au", "f", "paragraph", "header", "date1", "h1", "h2", "h3", "h4", "h5", "h6",
 //			"fp100", "fp101", "fp102", "fp103", "fp104", "fp105", "fp106", "abs" };
-	private static final String[] allElements = {"date", "dateline", "in", "profile", "cn", "docno", "co", "pe",
-			"text", "page", "tp", "pub", "headline", "byline",
+	private static final String[] allElements = {"date", // elements of FT 
+			"dateline", // elements of FT
+			"in", // elements of FT
+			"profile", // elements of FT
+			"cn", // elements of FT
+			"docno", // elements of FT
+			"co", // elements of FT
+			"pe", // elements of FT
+			"text", // elements of FT
+			"page", // elements of FT
+			"tp", // elements of FT
+			"pub", // elements of FT
+			"headline", // elements of FT
+			"byline", // elements of FT
 			"usdept", "agency", "usbureau", "doctitle", "summary", "supplem", "other",
 			"ht", "au", "f",
 			"paragraph"};
@@ -164,31 +176,32 @@ public class Searcher {
 	public static Map<String, Float> getBoost() {
 		
 		Map<String, Float> boost = new HashMap<String, Float>();
-		boost.put("text", (float) 4);
-		boost.put("summary", (float) 4);
-		boost.put("doctitle", (float) 4);
-		boost.put("headline", (float) 4);
-		boost.put("byline", (float) 2.5);
+		boost.put("date", (float) 0);
+		boost.put("dateline", (float) 2);		
+		boost.put("in", (float) 1);
+		boost.put("profile", (float) 0);
+		boost.put("cn", (float) 2);
+		boost.put("docno", (float) 0);
 		boost.put("co", (float) 1);
 		boost.put("pe", (float) 1);
-		boost.put("profile", (float) 0.75);
+		boost.put("text", (float) 24);
+		boost.put("page", (float) 0);
+		boost.put("tp", (float) 0);
+		boost.put("pub", (float) 0);
+		boost.put("headline", (float) 4);
+		boost.put("byline", (float) 1);
+		
+		boost.put("summary", (float) 4);
+		boost.put("doctitle", (float) 4);
 		boost.put("usdept", (float) 0.5);
 		boost.put("agency", (float) 0.5);
 		boost.put("usbureau", (float) 0.5);
 		boost.put("paragraph", (float) 0.5);
-		boost.put("date", (float) 0.25);
-		boost.put("tp", (float) 0.25);
-		boost.put("dateline", (float) 0.25);
 		boost.put("supplem", (float) 0.25);
-		boost.put("in", (float) 0.1);
-		boost.put("cn", (float) 0.1);
-		boost.put("page", (float) 0.1);
 		boost.put("other", (float) 0.1);
 		boost.put("ht", (float) 0.1);
 		boost.put("au", (float) 0.1);
 		boost.put("f", (float) 0.1);
-		boost.put("docno", (float) 0);
-		boost.put("pub", (float) 0);
 		
 		return boost;
 	}

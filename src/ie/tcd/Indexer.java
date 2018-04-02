@@ -30,6 +30,7 @@ import org.json.simple.parser.JSONParser;
 public class Indexer {
 
 	private static final String[] docsStr = { "ft", "fr94", "fbis", "latimes" };
+//	private static final String[] docsStr = { "fbis" };
 
 	/**
 	 * Main Method
@@ -89,8 +90,11 @@ public class Indexer {
 
 			// Create index
 			System.out.println("Creating index of " + docStr + " using English analyzer and BM25 similarity...");
+			int docNumber = 0;
 			for (Object obj : docs) {
 
+//				docNumber++;
+//				System.out.println(docNumber);
 				JSONObject doc = (JSONObject) obj;
 
 				Document document = new Document();

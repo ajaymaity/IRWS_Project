@@ -63,10 +63,12 @@ public class ParseFT {
 		Utils utils = new Utils();
 		Map<String, String> ftDoc = null;
 		int docCount = 0;
+		int fileCount = 0;
 		// Loop through files
 		System.out.println("Number of files: " + Integer.toString(filesList.size()));
 		for (File file : filesList) {
-
+			
+			System.out.println("FT File: " + Integer.toString(++fileCount) + " / " + Integer.toString(filesList.size()));
 			FileReader fileReader = new FileReader(file);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 
@@ -416,6 +418,7 @@ public class ParseFT {
 				}
 			}
 			bufferedReader.close();
+//			if (docCount >= 1) break;
 		}
 		System.out.println("Number of documents: " + Integer.toString(docCount));
 		return ftDocs;
