@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="libs/commons-cli-1.4.jar"/>
+	<classpathentry kind="lib" path="libs/java-json-schema.jar"/>
+	<classpathentry kind="lib" path="libs/json-simple-1.1.1.jar"/>
+	<classpathentry kind="lib" path="libs/jsoup-1.11.2.jar"/>
+	<classpathentry kind="lib" path="libs/lucene-analyzers-common-7.2.1.jar"/>
+	<classpathentry kind="lib" path="libs/lucene-core-7.2.1.jar"/>
+	<classpathentry kind="lib" path="libs/lucene-queryparser-7.2.1.jar"/>
+	<classpathentry kind="lib" path="/home/ajaymaity/gits/IRWS_Project/libs/watson-java-sdk-5.1.1-jar-with-dependencies.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

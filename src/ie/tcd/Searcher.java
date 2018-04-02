@@ -2,6 +2,7 @@ package ie.tcd;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
@@ -43,10 +45,53 @@ public class Searcher {
 
 	private static final int HITS_PER_PAGE = 1000;
 
-	private static final String[] allElements = { "date", "dateline", "in", "profile", "cn", "docno", "co", "pe",
-			"text", "page", "tp", "pub", "headline", "byline", "usdept", "agency", "usbureau", "doctitle", "summary",
-			"supplem", "other", "ht", "au", "f", "paragraph", "header", "date1", "h1", "h2", "h3", "h4", "h5", "h6",
-			"fp100", "fp101", "fp102", "fp103", "fp104", "fp105", "fp106", "abs" };
+//	private static final String[] allElements = { "date", "dateline", "in", "profile", "cn", "docno", "co", "pe",
+//			"text", "page", "tp", "pub", "headline", "byline", "usdept", "agency", "usbureau", "doctitle", "summary",
+//			"supplem", "other", "ht", "au", "f", "paragraph", "header", "date1", "h1", "h2", "h3", "h4", "h5", "h6",
+//			"fp100", "fp101", "fp102", "fp103", "fp104", "fp105", "fp106", "abs" };
+	private static final String[] allElements = {"date", "dateline", "in", "profile", "cn", "docno", "co", "pe",
+			"text", "page", "tp", "pub", "headline", "byline",
+			"usdept", "agency", "usbureau", "doctitle", "summary", "supplem", "other",
+			"ht", "au", "f",
+			"paragraph"};
+//	private static final String[] allElements = {"date", "docno",
+//			"text", "headline",
+//			"usdept", "agency", "usbureau", "doctitle", "summary", "supplem", "other",
+//			"ht", "au", "f",
+//			"paragraph"};
+	
+	private static String boostQueryString(String term, String boost, List<String> distinctWords) {
+		
+		String updatedQueryStr = "\"" + term + "\"^" +
+				boost + " ";
+		
+		String[] words = term.split(" ");
+		if (words.length > 1) {
+			
+			for (String word: words) {
+				
+				if (!distinctWords.contains(word)) {
+
+					distinctWords.add(word);
+					updatedQueryStr += "\"" + word + "\"^" +
+							boost + " ";
+				}
+			}
+		}
+		
+		return updatedQueryStr;
+	}
+	
+	private static List<String> updateDistinctWords(List<String> distinctWords, String term) {
+		
+		String[] words = term.split(" ");
+		for (String word: words) {
+			
+			if (!distinctWords.contains(word))
+				distinctWords.add(word);
+		}
+		return distinctWords;
+	}
 
 	/**
 	 * Create query from topic
@@ -54,12 +99,14 @@ public class Searcher {
 	 * @param top
 	 *            the topic JSON to create query from
 	 * @return the query string created from the topic JSON
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
 	 */
-	private static String createQuery(JSONObject top) {
+	private static String createQuery(JSONObject top) throws FileNotFoundException, IOException {
 
 		// Concatenate the four elements
-		String queryStr = (String) top.get("num") + " " + (String) top.get("title") + " " + (String) top.get("desc")
-				+ " " + (String) top.get("narr");
+		String queryStr = (String) top.get("num") + ". " + (String) top.get("title") + ". " + (String) top.get("desc")
+				+ ". " + (String) top.get("narr");
 
 		// Consider desc and narr elements
 		// String queryStr = (String) top.get("desc") + " " + (String) top.get("narr");
@@ -73,8 +120,77 @@ public class Searcher {
 		// Consider num, desc and narr elements
 		// String queryStr = (String) top.get("num") + " "
 		// + (String) top.get("desc") + " " + (String) top.get("narr");
-
-		return queryStr;
+		
+		// Term Boosting by detecting Entities
+//		WatsonNLU wnlu = new WatsonNLU();
+//		List<Map<String, Long>> valuesList = wnlu.analyze(queryStr);
+//		Set<String> entityKeys = valuesList.get(0).keySet();
+//		Set<String> keywordKeys = valuesList.get(1).keySet();
+//		
+//		String updatedQueryStr = "";
+//		List<String> distinctWords = new ArrayList<String>(); 
+//		for (String entityKey: entityKeys) {
+//
+//			updatedQueryStr += boostQueryString(entityKey, 
+//					Long.toString(valuesList.get(0).get(entityKey)), 
+//					distinctWords);
+//			distinctWords = updateDistinctWords(distinctWords, entityKey);
+//		}
+//		
+//		for (String keywordKey: keywordKeys) {
+//			
+//			updatedQueryStr += boostQueryString(keywordKey, "1", distinctWords);
+//			distinctWords = updateDistinctWords(distinctWords, keywordKey);
+//		}
+//		
+//		queryStr = queryStr.replaceAll("\\p{P}", "");
+//		String[] words = queryStr.split(" ");
+//		for (String word: words) {
+//
+//			if (word.contentEquals("")) continue;
+//			if (!distinctWords.contains(word)) {
+//
+//				distinctWords.add(word);
+//				String boost = "0.5";
+//				if (word.length() <= 3) boost = "0.1";
+//				updatedQueryStr += "\"" + word + "\"^" + boost + " ";
+//			}
+//		}
+		
+		String updatedQueryStr = queryStr;
+		return updatedQueryStr;
+	}
+	
+	public static Map<String, Float> getBoost() {
+		
+		Map<String, Float> boost = new HashMap<String, Float>();
+		boost.put("text", (float) 4);
+		boost.put("summary", (float) 4);
+		boost.put("doctitle", (float) 4);
+		boost.put("headline", (float) 4);
+		boost.put("byline", (float) 2.5);
+		boost.put("co", (float) 1);
+		boost.put("pe", (float) 1);
+		boost.put("profile", (float) 0.75);
+		boost.put("usdept", (float) 0.5);
+		boost.put("agency", (float) 0.5);
+		boost.put("usbureau", (float) 0.5);
+		boost.put("paragraph", (float) 0.5);
+		boost.put("date", (float) 0.25);
+		boost.put("tp", (float) 0.25);
+		boost.put("dateline", (float) 0.25);
+		boost.put("supplem", (float) 0.25);
+		boost.put("in", (float) 0.1);
+		boost.put("cn", (float) 0.1);
+		boost.put("page", (float) 0.1);
+		boost.put("other", (float) 0.1);
+		boost.put("ht", (float) 0.1);
+		boost.put("au", (float) 0.1);
+		boost.put("f", (float) 0.1);
+		boost.put("docno", (float) 0);
+		boost.put("pub", (float) 0);
+		
+		return boost;
 	}
 
 	/**
@@ -160,15 +276,21 @@ public class Searcher {
 		System.out.println("Searching index using English analyzer and BM25 similarity, with "
 				+ Integer.toString(HITS_PER_PAGE) + " hits per page.");
 		// Loop through all queries and retrieve documents
+		int queryNum = 0;
+		Map<String, Float> boosts = getBoost();
 		for (Object obj : tops) {
 
+			queryNum++;
 			JSONObject top = (JSONObject) obj;
 
 			String queryStr = createQuery(top);
 			queryFileContent.add(queryStr);
 
 			queryStr = queryStr.replace("/", "\\/");
-			MultiFieldQueryParser queryParser = new MultiFieldQueryParser(elements, analyzer);
+//			System.out.println(queryNum);
+//			System.out.println(queryStr);
+//			System.out.println();
+			MultiFieldQueryParser queryParser = new MultiFieldQueryParser(elements, analyzer, boosts);
 			Query query = queryParser.parse(queryStr);
 
 			// Search

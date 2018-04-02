@@ -8,6 +8,14 @@ Download data from web
 * UNZIP the file.
 * (Optional) You may UNZIP the file, such that the data folders: *dtds*, *fbis*, *fr94*, *ft*, and *latimes* are inside the directory: ```contents/Assignment Two/Assignment Two/```.
 
+Run JAR files
+--
+* Run the files in following sequence:
+	1. ```java -jar ParseDocs.java``` 
+	2. ```java -Xms8192m -Xmx12288m -jar Indexer.jar```
+	3. ```java -
+
+
 Configure the project in Eclipse
 --
 * Import the folder into Eclipse as a General project.

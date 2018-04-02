@@ -96,8 +96,10 @@ public class Indexer {
 				Document document = new Document();
 				@SuppressWarnings("unchecked")
 				Set<String> elements = doc.keySet();
-				for (String element : elements)
+				for (String element : elements) {
+					
 					document.add(new TextField(element, (String) doc.get(element), Field.Store.YES));
+				}
 				iwriter.addDocument(document);
 			}
 			System.out.println("Indexing done of " + docStr + ", and saved on disk.");

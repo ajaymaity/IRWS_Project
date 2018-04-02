@@ -51,7 +51,7 @@ public class ParseDocs {
 		// Delete old JSON files
 		utils.deleteDir(new File(outputDirStr + "ft.json"));
 		utils.deleteDir(new File(outputDirStr + "fr94.json"));
-//		utils.deleteDir(new File(outputDirStr + "fbis.json"));
+		utils.deleteDir(new File(outputDirStr + "fbis.json"));
 		utils.deleteDir(new File(outputDirStr + "latimes.json"));
 
 		// Parse and Store FT documents
@@ -89,11 +89,11 @@ public class ParseDocs {
 		Files.write(frPath, "]".getBytes(), StandardOpenOption.APPEND);
 		System.out.println("Storing done!\n");
 
-//		// Parse and Store FBIS documents
-//		System.out.println("Parsing FBIS...");
-//		ParseFbis fbis = new ParseFbis();
-//		fbis.parse();
-//		System.out.println("Done!\n");
+		// Parse and Store FBIS documents
+		System.out.println("Parsing FBIS...");
+		ParseFbis fbis = new ParseFbis();
+		fbis.parse();
+		System.out.println("Done!\n");
 
 		// Parse and Store LaTimes documents
 		System.out.println("Parsing Latimes...");
