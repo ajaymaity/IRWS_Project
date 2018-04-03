@@ -29,8 +29,8 @@ import org.json.simple.parser.JSONParser;
  */
 public class Indexer {
 
-	private static final String[] docsStr = { "ft", "fr94", "fbis", "latimes" };
-//	private static final String[] docsStr = { "fbis" };
+//	private static final String[] docsStr = { "ft", "fr94", "fbis", "latimes" };
+	private static final String[] docsStr = { "fbis" };
 
 	/**
 	 * Main Method

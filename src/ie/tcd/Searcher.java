@@ -121,7 +121,7 @@ public class Searcher {
 				+ ". " + (String) top.get("narr");
 
 		// Consider desc and narr elements
-		// String queryStr = (String) top.get("desc") + " " + (String) top.get("narr");
+//		 String queryStr = (String) top.get("desc") + " " + (String) top.get("narr");
 
 		// Consider only desc
 		// String queryStr = (String) top.get("desc");
@@ -133,12 +133,32 @@ public class Searcher {
 		// String queryStr = (String) top.get("num") + " "
 		// + (String) top.get("desc") + " " + (String) top.get("narr");
 		
+		queryStr = queryStr.replaceAll("\\?", ".").replaceAll("\\*", " ").replaceAll("\\:", "").replaceAll("\\s", " ");
+		
 		// Term Boosting by detecting Entities
-//		WatsonNLU wnlu = new WatsonNLU();
-//		List<Map<String, Long>> valuesList = wnlu.analyze(queryStr);
-//		Set<String> entityKeys = valuesList.get(0).keySet();
+		WatsonNLU wnlu = new WatsonNLU();
+		List<Map<String, Long>> valuesList = wnlu.analyze(queryStr);
+		Set<String> entityKeys = valuesList.get(0).keySet();
 //		Set<String> keywordKeys = valuesList.get(1).keySet();
-//		
+		
+		// Boost all entities by their count appearing in the query + 1
+		for (String entityKey: entityKeys)
+			queryStr = queryStr.replaceAll(" " + entityKey + " ", " \"" + entityKey + "\"^" + Long.toString(valuesList.get(0).get(entityKey) + 1) + " ");
+		
+		List<String> distinctWords = new ArrayList<String>();
+		String[] words = queryStr.split(" ");
+		for (String word: words) {
+			
+			if (!distinctWords.contains(word)) {
+				
+				distinctWords.add(word);
+				if (word.length() <= 3) {
+				
+					queryStr = queryStr.replaceAll(" " + word + " ", " " + word + "^0 ");
+				}
+			}
+		}
+		
 //		String updatedQueryStr = "";
 //		List<String> distinctWords = new ArrayList<String>(); 
 //		for (String entityKey: entityKeys) {
@@ -170,6 +190,7 @@ public class Searcher {
 //		}
 		
 		String updatedQueryStr = queryStr;
+		System.out.println(updatedQueryStr);
 		return updatedQueryStr;
 	}
 	

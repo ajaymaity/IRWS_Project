@@ -170,6 +170,7 @@ public class ParseFBIS2 {
 									if (partitions.length > 1)
 										Errors.printUnexpectedErrorAndExit(line, lineNumber, file);
 
+									Map<String, String> fbisDoc2 = new HashMap<String, String>();
 									for (int i = 0; i < elements.length; i++) {
 
 										String elementValue = fbisDoc.get(elements[i]);
@@ -180,7 +181,8 @@ public class ParseFBIS2 {
 											elementValue = elementValue.replaceAll("&gt", ">");
 											elementValue = elementValue.replaceAll("&lt", "<");
 											elementValue = elementValue.replaceAll(" +", " ");
-											fbisDoc.put(elements[i], elementValue);
+											if (elementValue.contentEquals(""))
+												fbisDoc2.put(elements[i], elementValue);
 
 											// DEBUG
 											// if ((elementValue.contains("<") || elementValue.contains("</")) &&
@@ -191,7 +193,7 @@ public class ParseFBIS2 {
 										}
 									}
 
-									fbisDocs.add(new JSONObject(fbisDoc).toString() + ",");
+									fbisDocs.add(new JSONObject(fbisDoc2).toString() + ",");
 									fbisDoc = null;
 									docCount++;
 								} else
