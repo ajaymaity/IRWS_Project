@@ -140,15 +140,15 @@ public class Searcher {
 		queryStr = queryStr.replaceAll("A relevant document ", "").replaceAll("document", "");
 		queryStr = queryStr.replaceAll("\\?", ".").replaceAll("\\*", " ").replaceAll("\\:", "").replaceAll("\\s", " ");
 		
-		// Term Boosting by detecting Entities
-		WatsonNLU wnlu = new WatsonNLU();
-		List<Map<String, Long>> valuesList = wnlu.analyze(queryStr);
-		Set<String> entityKeys = valuesList.get(0).keySet();
-//		Set<String> keywordKeys = valuesList.get(1).keySet();
-		
-		// Boost all entities by their count appearing in the query + 1
-		for (String entityKey: entityKeys)
-			queryStr = queryStr.replaceAll(" " + entityKey + " ", " \"" + entityKey + "\"^" + Long.toString(valuesList.get(0).get(entityKey) + 1) + " ");
+//		// Term Boosting by detecting Entities
+//		WatsonNLU wnlu = new WatsonNLU();
+//		List<Map<String, Long>> valuesList = wnlu.analyze(queryStr);
+//		Set<String> entityKeys = valuesList.get(0).keySet();
+////		Set<String> keywordKeys = valuesList.get(1).keySet();
+//		
+//		// Boost all entities by their count appearing in the query + 1
+//		for (String entityKey: entityKeys)
+//			queryStr = queryStr.replaceAll(" " + entityKey + " ", " \"" + entityKey + "\"^" + Long.toString(valuesList.get(0).get(entityKey) + 1) + " ");
 		
 		List<String> distinctWords = new ArrayList<String>();
 		String[] words = queryStr.split(" ");
