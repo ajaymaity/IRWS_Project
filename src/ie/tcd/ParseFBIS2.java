@@ -173,15 +173,16 @@ public class ParseFBIS2 {
 									Map<String, String> fbisDoc2 = new HashMap<String, String>();
 									for (int i = 0; i < elements.length; i++) {
 
+										fbisDoc2 = new HashMap<String, String>();
 										String elementValue = fbisDoc.get(elements[i]);
 										if (elementValue != null) {
 
-											elementValue = elementValue.trim();
 											elementValue = elementValue.replaceAll("&amp", "&");
 											elementValue = elementValue.replaceAll("&gt", ">");
 											elementValue = elementValue.replaceAll("&lt", "<");
 											elementValue = elementValue.replaceAll(" +", " ");
-											if (elementValue.contentEquals(""))
+											elementValue = elementValue.trim();
+											if (!elementValue.contentEquals(""))
 												fbisDoc2.put(elements[i], elementValue);
 
 											// DEBUG
@@ -193,7 +194,8 @@ public class ParseFBIS2 {
 										}
 									}
 
-									fbisDocs.add(new JSONObject(fbisDoc2).toString() + ",");
+									if (fbisDoc2 != null)
+										fbisDocs.add(new JSONObject(fbisDoc2).toString() + ",");
 									fbisDoc = null;
 									docCount++;
 								} else
@@ -435,8 +437,8 @@ public class ParseFBIS2 {
 					} else
 						Errors.printCantParseErrorAndExit(line, lineNumber, file);
 				}
+//				if (docCount > 10) break;
 			}
-			bufferedReader.close();
 		}
 		System.out.println("Number of documents: " + Integer.toString(docCount));
 		return fbisDocs;

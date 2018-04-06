@@ -15,6 +15,8 @@ import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.search.similarities.BM25Similarity;
+import org.apache.lucene.search.similarities.ClassicSimilarity;
+import org.apache.lucene.search.similarities.LMDirichletSimilarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.json.simple.JSONArray;
@@ -29,8 +31,8 @@ import org.json.simple.parser.JSONParser;
  */
 public class Indexer {
 
-//	private static final String[] docsStr = { "ft", "fr94", "fbis", "latimes" };
-	private static final String[] docsStr = { "fbis" };
+	private static final String[] docsStr = { "ft", "fr94", "fbis", "latimes" };
+//	private static final String[] docsStr = { "fbis" };
 
 	/**
 	 * Main Method
@@ -64,6 +66,8 @@ public class Indexer {
 		IndexWriterConfig config = new IndexWriterConfig(analyzer);
 		config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
 		config.setSimilarity(new BM25Similarity());
+//		config.setSimilarity(new LMDirichletSimilarity());
+//		config.setSimilarity(new ClassicSimilarity());
 		config.setRAMBufferSizeMB(50);
 		IndexWriter iwriter = new IndexWriter(directory, config);
 

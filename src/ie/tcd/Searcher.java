@@ -117,8 +117,12 @@ public class Searcher {
 	private static String createQuery(JSONObject top) throws FileNotFoundException, IOException {
 
 		// Concatenate the four elements
-		String queryStr = (String) top.get("num") + ". " + (String) top.get("title") + ". " + (String) top.get("desc")
-				+ ". " + (String) top.get("narr");
+//		String queryStr = (String) top.get("num") + ". " + (String) top.get("title") + ". " + (String) top.get("desc")
+//				+ ". " + (String) top.get("narr");
+		
+		// Discard num
+		String queryStr = (String) top.get("title") + ". " + (String) top.get("desc")
+		+ ". " + (String) top.get("narr");
 
 		// Consider desc and narr elements
 //		 String queryStr = (String) top.get("desc") + " " + (String) top.get("narr");
@@ -130,9 +134,10 @@ public class Searcher {
 		// String queryStr = (String) top.get("narr");
 
 		// Consider num, desc and narr elements
-		// String queryStr = (String) top.get("num") + " "
-		// + (String) top.get("desc") + " " + (String) top.get("narr");
+//		 String queryStr = (String) top.get("num") + " "
+//		 + (String) top.get("desc") + " " + (String) top.get("narr");
 		
+		queryStr = queryStr.replaceAll("A relevant document ", "").replaceAll("document", "");
 		queryStr = queryStr.replaceAll("\\?", ".").replaceAll("\\*", " ").replaceAll("\\:", "").replaceAll("\\s", " ");
 		
 		// Term Boosting by detecting Entities
@@ -149,10 +154,11 @@ public class Searcher {
 		String[] words = queryStr.split(" ");
 		for (String word: words) {
 			
-			if (!distinctWords.contains(word)) {
+			word = word.trim();
+			if (!word.contentEquals("") && !distinctWords.contains(word)) {
 				
 				distinctWords.add(word);
-				if (word.length() <= 3) {
+				if (word.length() <= 1) {
 				
 					queryStr = queryStr.replaceAll(" " + word + " ", " " + word + "^0 ");
 				}
@@ -306,6 +312,8 @@ public class Searcher {
 		// Create an index searcher
 		IndexSearcher isearcher = new IndexSearcher(ireader);
 		isearcher.setSimilarity(new BM25Similarity());
+//		isearcher.setSimilarity(new LMDirichletSimilarity());
+//		isearcher.setSimilarity(new ClassicSimilarity());
 
 		System.out.println("Searching index using English analyzer and BM25 similarity, with "
 				+ Integer.toString(HITS_PER_PAGE) + " hits per page.");

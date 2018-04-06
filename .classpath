@@ -9,6 +9,7 @@
 	<classpathentry kind="lib" path="libs/lucene-analyzers-common-7.2.1.jar"/>
 	<classpathentry kind="lib" path="libs/lucene-core-7.2.1.jar"/>
 	<classpathentry kind="lib" path="libs/lucene-queryparser-7.2.1.jar"/>
-	<classpathentry kind="lib" path="/home/ajaymaity/gits/IRWS_Project/libs/watson-java-sdk-5.1.1-jar-with-dependencies.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ajay Maity/Desktop/TCD/Codes/IRWS_Project/libs/watson-java-sdk-5.1.1-jar-with-dependencies.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Ajay Maity/Desktop/TCD/Codes/IRWS_Project/libs/org.annolab.tt4j-1.2.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
